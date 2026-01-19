@@ -3,7 +3,6 @@ import streamlit as st
 from internal.form import create_experiment_form
 from internal.visualization import create_thermal_conductivity_plot
 
-# テスト 研究室PCからの編集
 # Set page configuration
 st.set_page_config(
     page_title="Thermal Conductivity Prediction Model",
@@ -58,10 +57,10 @@ if st.session_state.optimized_params is not None and st.session_state.calculate_
         )
         st.pyplot(fig)
         results_1 = {
-            str(st.session_state.experiment_1.temperature) + "(°C)"+ "暴露環境における熱伝導率の収束値 Lconv[W/(m･K)]": f"{result_thermal_conductivity:.4f} W/(m･K)",
-            "lamda_gas[W/(m･K)]": f"{optimized_params.lamda_gas.actual_value:.4f} W/(m･K)",
-            "E[J/mol]": f"{optimized_params.e_dash.actual_value:.4f} J/mol",
-            "k_0[-]": f"{optimized_params.k_0.actual_value:.10f} -",
+            str(st.session_state.experiment_1.temperature) + "(°C)"+ "暴露:長期経過後の収束値 Lconv[W/(m･K)]": f"{result_thermal_conductivity:.4f} W/(m･K)",
+            "λgas[W/(m･K)]": f"{optimized_params.lamda_gas.actual_value:.4f} W/(m･K)",
+            "E[J/mol]": f"{optimized_params.e_dash.actual_value:.1f} J/mol",
+            "k₀[-]": f"{optimized_params.k_0.actual_value:.6f} -",
         }
         st.table(results_1, border="horizontal")
     with col2:
@@ -73,9 +72,9 @@ if st.session_state.optimized_params is not None and st.session_state.calculate_
         )
         st.pyplot(fig)
         results_2 = {
-            str(st.session_state.experiment_2.temperature) + "(°C)"+ "暴露環境における熱伝導率の収束値 Lconv[W/(m･K)]": f"{result_thermal_conductivity:.4f} W/(m･K)",
-            "lamda_gas[W/(m･K)]": f"{optimized_params.lamda_gas.actual_value:.4f} W/(m･K)",
-            "E[J/mol]": f"{optimized_params.e_dash.actual_value:.4f} J/mol",
-            "k_0[-]": f"{optimized_params.k_0.actual_value:.10f} -",
+            str(st.session_state.experiment_2.temperature) + "(°C)"+ "暴露：長期経過後の収束値 Lconv[W/(m･K)]": f"{result_thermal_conductivity:.4f} W/(m･K)",
+            "λgas[W/(m･K)]": f"{optimized_params.lamda_gas.actual_value:.4f} W/(m･K)",
+            "E[J/mol]": f"{optimized_params.e_dash.actual_value:.1f} J/mol",
+            "k₀[-]": f"{optimized_params.k_0.actual_value:.6f} -",
         }
         st.table(results_2, border="horizontal")

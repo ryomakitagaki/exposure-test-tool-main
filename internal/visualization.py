@@ -36,8 +36,8 @@ def create_thermal_conductivity_plot(calculate_table):
     # --------------------------------------------------
 
     # Plot actual and estimated values
-    ax.plot(elapsed_days, actual_conductivity, 'o-', label='Actual Measurements', color='blue')
-    ax.plot(elapsed_days, estimated_conductivity, 's--', label='Estimated (Optimized Model)', color='red')
+    ax.plot(elapsed_days, actual_conductivity, 'o-', label='Actual Measurements', color='blue', zorder=2, alpha=0.5)
+    ax.plot(elapsed_days, estimated_conductivity, 's--', label='Estimated (Optimized Model)', color='red', zorder=1)
 
     # Add labels and legend
     ax.set_xlabel('経過日数 (days)')
