@@ -50,7 +50,7 @@ if st.session_state.optimized_params is not None and st.session_state.calculate_
     # Display parameter values
     col1, col2 = st.columns(2)
     with col1:
-        st.info(f"Experiment: {st.session_state.experiment_1.sample_name}")
+        st.info(f"sample01 condition: {st.session_state.experiment_1.sample_name}")
         result_thermal_conductivity = optimized_params.lamda_gas.actual_value + \
                                       st.session_state.experiment_1.measurements[0].thermal_conductivity
         fig = create_thermal_conductivity_plot(
@@ -65,7 +65,7 @@ if st.session_state.optimized_params is not None and st.session_state.calculate_
         }
         st.table(results_1, border="horizontal")
     with col2:
-        st.info(f"Experiment: {st.session_state.experiment_2.sample_name}")
+        st.info(f"sample02 condition: {st.session_state.experiment_2.sample_name}")
         result_thermal_conductivity = optimized_params.lamda_gas.actual_value + \
                                       st.session_state.experiment_2.measurements[0].thermal_conductivity
         fig = create_thermal_conductivity_plot(

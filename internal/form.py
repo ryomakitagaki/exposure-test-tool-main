@@ -79,7 +79,7 @@ def create_experiment_form():
                 key="data_editor_2"
             )
 
-        submitted = st.form_submit_button("Create Experiment")
+        submitted = st.form_submit_button("Calculate")
 
         if submitted:
             # Create experiment 1
