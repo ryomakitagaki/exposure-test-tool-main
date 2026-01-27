@@ -1,4 +1,9 @@
+from datetime import date
+
 import streamlit as st
+import io
+import pandas as pd
+import plotly.io as pio
 
 from internal.form import create_experiment_form
 from internal.visualization import create_thermal_conductivity_plot
@@ -55,7 +60,7 @@ if st.session_state.optimized_params is not None and st.session_state.calculate_
         fig = create_thermal_conductivity_plot(
             calculate_table=st.session_state.calculate_table_1,
         )
-        st.pyplot(fig)
+        st.plotly_chart(fig)
         results_1 = {
             str(st.session_state.experiment_1.temperature) + "(°C)"+ "暴露:長期経過後の収束値 Lconv[W/(m･K)]": f"{result_thermal_conductivity:.4f} W/(m･K)",
             "λgas[W/(m･K)]": f"{optimized_params.lamda_gas.actual_value:.4f} W/(m･K)",
@@ -63,6 +68,28 @@ if st.session_state.optimized_params is not None and st.session_state.calculate_
             "k₀[-]": f"{optimized_params.k_0.actual_value:.6f} -",
         }
         st.table(results_1, border="horizontal")
+
+        # Create CSV data for plot data
+        # Extract data for plotting
+        elapsed_days_1 = [row.elapsed_sec / 86400 for row in st.session_state.calculate_table_1.rows]
+        actual_conductivity_1 = [row.thermal_conductivity for row in st.session_state.calculate_table_1.rows]
+        estimated_conductivity_1 = [row.estimated_conductivity for row in st.session_state.calculate_table_1.rows]
+
+        # Create DataFrame and CSV
+        plot_data_1 = pd.DataFrame({
+            'Elapsed Days': elapsed_days_1,
+            'Actual Conductivity (W/(m･K))': actual_conductivity_1,
+            'Estimated Conductivity (W/(m･K))': estimated_conductivity_1
+        })
+        plot_csv_1 = plot_data_1.to_csv(index=False)
+        # Add CSV download button for plot data
+        st.download_button(
+            label="Download as CSV",
+            data=plot_csv_1,
+            file_name=f"plot_data_sample01_{date.today()}_{st.session_state.experiment_1.sample_name}.csv",
+            mime="text/csv",
+            key="plot_data_1"
+        )
     with col2:
         st.info(f"sample02 condition: {st.session_state.experiment_2.sample_name}")
         result_thermal_conductivity = optimized_params.lamda_gas.actual_value + \
@@ -70,7 +97,8 @@ if st.session_state.optimized_params is not None and st.session_state.calculate_
         fig = create_thermal_conductivity_plot(
             calculate_table=st.session_state.calculate_table_2,
         )
-        st.pyplot(fig)
+        st.plotly_chart(fig)
+
         results_2 = {
             str(st.session_state.experiment_2.temperature) + "(°C)"+ "暴露：長期経過後の収束値 Lconv[W/(m･K)]": f"{result_thermal_conductivity:.4f} W/(m･K)",
             "λgas[W/(m･K)]": f"{optimized_params.lamda_gas.actual_value:.4f} W/(m･K)",
@@ -78,3 +106,25 @@ if st.session_state.optimized_params is not None and st.session_state.calculate_
             "k₀[-]": f"{optimized_params.k_0.actual_value:.6f} -",
         }
         st.table(results_2, border="horizontal")
+
+        # Create CSV data for plot data
+        # Extract data for plotting
+        elapsed_days_2 = [row.elapsed_sec / 86400 for row in st.session_state.calculate_table_2.rows]
+        actual_conductivity_2 = [row.thermal_conductivity for row in st.session_state.calculate_table_2.rows]
+        estimated_conductivity_2 = [row.estimated_conductivity for row in st.session_state.calculate_table_2.rows]
+
+        # Create DataFrame and CSV
+        plot_data_2 = pd.DataFrame({
+            'Elapsed Days': elapsed_days_2,
+            'Actual Conductivity (W/(m･K))': actual_conductivity_2,
+            'Estimated Conductivity (W/(m･K))': estimated_conductivity_2
+        })
+        plot_csv_2 = plot_data_2.to_csv(index=False)
+        # Add CSV download button for plot data
+        st.download_button(
+            label="Download as CSV",
+            data=plot_csv_2,
+            file_name=f"plot_data_sample02_{date.today()}_{st.session_state.experiment_2.sample_name}.csv",
+            mime="text/csv",
+            key="plot_data_2"
+        )

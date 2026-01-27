@@ -69,15 +69,6 @@ def estimate_thermal_conductivity(
 
     inner_exponent = -e_dash.actual_value / (R_gas_constant * abs_temperature)
     middle_term = k_0.actual_value * measurement_time_sec * np.exp(inner_exponent)
-    
-    # --- 変更前 ---
-    #numerator = 1 - np.exp(middle_term)
-    #denominator = np.exp(middle_term)
-    #result = -lamda_gas.actual_value * (numerator / denominator) + initial_thermal_conductivity
-    
-    # --- 変更後（数式変形：割り算を回避）---
-    # (1 - exp(x)) / exp(x) は exp(-x) - 1 と等価です。
-    # xが巨大になっても、exp(-x)は0に近づくだけなのでエラーになりません。
     term = np.exp(-middle_term) - 1
     result = -lamda_gas.actual_value * term + initial_thermal_conductivity
 
@@ -107,8 +98,6 @@ class CalculateTable:
 
     def calculate_diff_area(self, row: CalculateRow, prev_row: CalculateRow):
         time_delta = row.elapsed_sec - prev_row.elapsed_sec
-        # 台形の高さ（誤差の平均） × 底辺（時間）
-        # |誤差1| + |誤差2| / 2 * Δt
         area = (abs(prev_row.diff_conductivity) + abs(row.diff_conductivity)) / 2 * time_delta
         row.diff_area = area
 
@@ -214,12 +203,6 @@ def minimize_solver(calculate_table_1: CalculateTable, calculate_table_2: Calcul
             
             # スコア計算
             final_score = total_diff_area / elapsed_sec
-
-            # 【変更点2】flush=Trueをつけて、計算中のスコアを強制表示（動作確認用）
-            # ログが流れすぎるのが嫌な場合は、ここをコメントアウトしてください
-            # print(f"Step Score: {final_score}", flush=True)
-
-            # もし計算結果が NaN や Inf になっていたらエラー扱いにする
             if not np.isfinite(final_score):
                  return 1e20
 
@@ -237,9 +220,6 @@ def minimize_solver(calculate_table_1: CalculateTable, calculate_table_2: Calcul
     result = optimize.differential_evolution(
         func=objective_function,
         bounds=bounds,
-
-        # --- 追加・変更箇所 ---
-        # --- 修正版（rand1bin用） ---
         strategy='rand1bin',   # 広く探す設定（OKです）
         maxiter=100,          # 収束が遅いので多めに（OKです）
         popsize=50,            # 【修正】1000→50（これで十分性能が出ます）
